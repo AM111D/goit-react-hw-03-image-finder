@@ -1,23 +1,27 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Searchbar from './Searchbar/Searchbar';
+import ImageGallery from './ImageGallery/ImageGallery';
 
 class App extends Component {
-  state = { 
-    images: null
-   }
+  state = {
+    imagesName: '',
+  };
 
-  componentDidMount() {
-     fetch('https://pixabay.com/api/?q=cat&page=1&key=25187003-ac92f0861cd819d45c4ecbcb8&image_type=photo&orientation=horizontal&per_page=12')
-    .then( res => res.json())
-    .then(res => console.log(res.hits) )
-     
-  }
+  handleFormSubmit = imagesName => {
+    console.log(imagesName);
+    this.setState({ imagesName });
+  };
 
   render() {
     return (
       <div>
-        <ul>
-          
-        </ul>
+        {/* {this.state.loading && <h1>download...</h1>}
+        {this.state.images && <div>{this.state.images.id}</div>} */}
+        <Searchbar onSubmit={this.handleFormSubmit} />
+        <ImageGallery imagesName={this.state.imagesName} />
+        <ToastContainer autoClose={3000} />
       </div>
     );
   }
