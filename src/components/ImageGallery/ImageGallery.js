@@ -1,73 +1,99 @@
 import React, { Component } from 'react';
+import ImageSearchError from 'components/ImagesError/ImagesError';
+import ImageGalleryItem from 'components/ImageGalleryItem/ImageGalleryItem';
+import ImagesLoader from 'components/Loader/Loader';
+import css from './ImageGallery.module.css';
+import FetchImageApi from '../../services/image-api';
+import LoadMoreBtn from 'components/Button/Button';
 
 class ImageGallery extends Component {
   state = {
-    images: null,
+    images: [],
     error: null,
     status: 'idle',
+    page: 1,
+    loading: false,
+    isButtonDisabled: false, // добавлено
   };
 
-  componentDidUpdate(prevProps, prevState) {
+  async componentDidUpdate(prevProps, prevState) {
     const prevName = prevProps.imagesName;
     const nextName = this.props.imagesName;
+    const { page } = this.state;
     if (prevName !== nextName) {
       this.setState({ status: 'pending' });
-      fetch(
-        `https://pixabay.com/api/?key=25187003-ac92f0861cd819d45c4ecbcb8&q=${nextName}&image_type=photo&orientation=horizontal&per_page=12`
-      )
-        .then(response => {
-          if (response.ok) {
-            return response.json();
-          }
-          return Promise.reject(new Error(`нет картинокс именем ${nextName}`));
-        })
-        .then(images =>
-          this.setState({ images: images.hits, status: 'resolve' })
-        )
-        .catch(error => this.setState({ error, status: 'reejecteds' }))
-        .finally(() => this.setState({ loading: false }));
+      try {
+        const images = await FetchImageApi(nextName);
+        console.log(images);
+        this.setState({
+          images,
+          status: 'resolve',
+          page: 1,
+          isButtonDisabled: false, // сбрасываем значение disabled
+        });
+      } catch (error) {
+        this.setState({ error, status: 'rejected' });
+      } finally {
+        this.setState({ loading: false });
+      }
     }
   }
 
+  loadMoreImages = async () => {
+    const { images, page } = this.state;
+    const { imagesName } = this.props;
+    this.setState({ loading: true });
+    try {
+      const newImages = await FetchImageApi(imagesName, page + 1);
+      if (newImages.length === 0) {
+        this.setState({ isButtonDisabled: true }); // устанавливаем значение disabled
+      } else {
+        this.setState({
+          images: [...images, ...newImages],
+          status: 'resolve',
+          page: page + 1,
+          isButtonDisabled: false, // сбрасываем значение disabled
+        });
+      }
+    } catch (error) {
+      this.setState({ error, status: 'rejected' });
+    } finally {
+      this.setState({ loading: false });
+    }
+  };
   render() {
-    const { images, loading, error, status } = this.state;
+    const { images, error, status, loading, isButtonDisabled } = this.state; // изменено
     const { imagesName } = this.props;
 
-    if (status === 'idle') {
-      return <div>Введите имя для поиска</div>;
-    }
-
     if (status === 'pending') {
-      return <div>Loading....</div>;
+      return <ImagesLoader />;
     }
 
     if (status === 'rejected') {
-      return <h1>{error.message}</h1>;
+      return <ImageSearchError message={error.message} />;
     }
 
     if (status === 'resolve') {
-      <div>
-        {images.map(image => (
-          <img key={image.id} src={image.previewURL} alt={image.tags} />
-        ))}
-      </div>;
-    }
+      if (images.length === 0) {
+        return (
+          <p className={css.noSearch}>
+            По запросу "{imagesName}" ничего не найдено
+          </p>
+        );
+      }
 
-    return (
-      <div>
-        {error && <h1>{error.message}</h1>}
-        {/* <h2>{imagesName}</h2>  */}
-        {loading && <div>Loading....</div>}
-        {!imagesName && <div>Введите имя для поиска</div>}
-        {images && (
-          <div>
-            {images.map(image => (
-              <img key={image.id} src={image.previewURL} alt={image.tags} />
-            ))}
-          </div>
-        )}
-      </div>
-    );
+      return (
+        <div>
+          <ul className={css.imageGallery}>
+            <ImageGalleryItem images={images} />
+          </ul>
+          <LoadMoreBtn
+            page={this.loadMoreImages}
+            disabled={isButtonDisabled} // изменено
+          />
+        </div>
+      );
+    }
   }
 }
 
