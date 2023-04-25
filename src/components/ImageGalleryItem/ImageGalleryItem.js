@@ -1,26 +1,14 @@
 import css from './ImageGalleryItem.module.css';
 
-function ImageGalleryItem({ images }) {
+const ImageGalleryItem = props => {
+  console.log(props.tags);
   return (
-    <>
-      {images === null ? (
-        <p>No images found</p>
-      ) : (
-        <>
-          {images.map(image => (
-            <li key={image.id} id={image.id} className={css.imageGalleryItem}>
-              <a>
-                <img
-                  src={image.webformatURL}
-                  className={css.imageGalleryItemImage}
-                />
-              </a>
-            </li>
-          ))}
-        </>
-      )}
-    </>
+    <li className={css.gallery_item} key={props.id} id={props.id}>
+      <a>
+        <img src={props.webformatURL} className={css.gallery_item_image} />
+      </a>
+    </li>
   );
-}
+};
 
 export default ImageGalleryItem;
