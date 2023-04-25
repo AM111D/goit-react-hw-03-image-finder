@@ -5,7 +5,7 @@ import ImagesLoader from 'components/Loader/Loader';
 import css from './ImageGallery.module.css';
 import FetchImageApi from '../../services/image-api';
 import LoadMoreBtn from 'components/Button/Button';
-import ModalOpenImages from 'components/Modal/Module';
+import ModalOpenImages from 'components/Modal/Modal';
 
 class ImageGallery extends Component {
   state = {
@@ -15,6 +15,7 @@ class ImageGallery extends Component {
     page: 1,
     loading: false,
     isButtonDisabled: true,
+    showModal: false,
   };
   async componentDidUpdate(prevProps, prevState) {
     const prevName = prevProps.imagesName;
@@ -30,7 +31,6 @@ class ImageGallery extends Component {
           status: 'resolve',
           page: 1,
           isButtonDisabled: false,
-          showModal: false,
         });
       } catch (error) {
         this.setState({ error, status: 'rejected' });
@@ -100,6 +100,7 @@ class ImageGallery extends Component {
           <ul className={css.imageGallery}>
             <ImageGalleryItem images={images} />
             {/* {showModal && <ModalOpenImages />} */}
+            <ModalOpenImages />
           </ul>
           <LoadMoreBtn page={this.loadMoreImages} disabled={isButtonDisabled} />
         </div>

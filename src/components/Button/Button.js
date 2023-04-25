@@ -6,11 +6,7 @@ function LoadMoreBtn({ page, isButtonDisabled }) {
 
   return (
     <>
-      <button
-        type="button"
-        onClick={handleClick}
-        isButtonDisabled={isButtonDisabled}
-      >
+      <button type="button" onClick={handleClick} disabled={!isButtonDisabled}>
         MORE
       </button>
     </>
