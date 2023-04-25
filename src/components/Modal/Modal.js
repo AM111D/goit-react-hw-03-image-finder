@@ -1,18 +1,36 @@
+import React, { Component } from 'react';
 import css from './Modal.module.css';
-import * as basicLightbox from 'basiclightbox';
+import propTypes from 'prop-types';
 
-function ModalOpenImages() {
-  const instance = basicLightbox.create(`
-    <div class="modal">
-      <p>
-        qw
-      </p>
-    </div>
-  `);
+class Modal extends Component {
+  // componentDidMount() {
+  //   window.addEventListener('keydown', this.handleClose);
+  // }
 
-  instance.show();
+  // componentWillUnmount() {
+  //   window.removeEventListener('keydown', this.handleClose);
+  // }
 
-  //   return null;
+  // handleClose = e => {
+  //   if (e.code === 'Escape') {
+  //     return this.props.onClick();
+  //   }
+  // };
+
+  render() {
+    return (
+      <div className={css.overlay} onClick={this.props.onClick}>
+        <div className={css.modal}>
+          <img src={this.props.images[0].largeImageURL} alt="" />
+        </div>
+      </div>
+    );
+  }
 }
 
-export default ModalOpenImages;
+Modal.propTypes = {
+  photo: propTypes.string.isRequired,
+  onClick: propTypes.func.isRequired,
+};
+
+export default Modal;

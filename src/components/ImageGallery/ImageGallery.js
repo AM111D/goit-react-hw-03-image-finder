@@ -5,7 +5,7 @@ import ImagesLoader from 'components/Loader/Loader';
 import css from './ImageGallery.module.css';
 import FetchImageApi from '../../services/image-api';
 import LoadMoreBtn from 'components/Button/Button';
-import ModalOpenImages from 'components/Modal/Modal';
+import Modal from 'components/Modal/Modal';
 
 class ImageGallery extends Component {
   state = {
@@ -17,21 +17,27 @@ class ImageGallery extends Component {
     isButtonDisabled: true,
     showModal: false,
   };
-  async componentDidUpdate(prevProps, prevState) {
+  async componentDidUpdate(prevProps) {
     const prevName = prevProps.imagesName;
     const nextName = this.props.imagesName;
-    const { page } = this.state;
     if (prevName !== nextName) {
       this.setState({ status: 'pending', loading: true }); // устанавливаем loading в true
       try {
         const images = await FetchImageApi(nextName);
         console.log(images);
-        this.setState({
-          images,
-          status: 'resolve',
-          page: 1,
-          isButtonDisabled: false,
-        });
+        if (images.length < 12) {
+          this.setState({
+            images,
+            status: 'resolve',
+            isButtonDisabled: true,
+          });
+        } else {
+          this.setState({
+            images,
+            status: 'resolve',
+            isButtonDisabled: false,
+          });
+        }
       } catch (error) {
         this.setState({ error, status: 'rejected' });
       } finally {
@@ -40,21 +46,15 @@ class ImageGallery extends Component {
     }
   }
 
-  toggleModal = () => {
-    this.setState(({ showModal }) => ({
-      showModal: !showModal,
-    }));
-  };
-
   loadMoreImages = async () => {
     const { images, page } = this.state;
     const { imagesName } = this.props;
     this.setState({ loading: true });
     try {
       const newImages = await FetchImageApi(imagesName, page + 1);
+
       if (newImages.length === 0) {
         this.setState({
-          isButtonDisabled: false,
           loading: false,
         });
         return;
@@ -64,13 +64,18 @@ class ImageGallery extends Component {
         images: allImages,
         status: 'resolve',
         page: page + 1,
-        isButtonDisabled: allImages.length === FetchImageApi.totalImages,
       });
     } catch (error) {
       this.setState({ error, status: 'rejected' });
     } finally {
       this.setState({ loading: false });
     }
+  };
+
+  toggleModal = () => {
+    this.setState(({ showModal }) => ({
+      showModal: !showModal,
+    }));
   };
   render() {
     const { images, error, status, loading, isButtonDisabled, showModal } =
@@ -96,11 +101,16 @@ class ImageGallery extends Component {
 
       return (
         <div>
-          {console.log(isButtonDisabled)}
+          <button type="button" onClick={this.toggleModal}>
+            open modal
+          </button>
+          {showModal && (
+            <Modal>
+              <img src="../../../assets/deploy-status.png" />
+            </Modal>
+          )}
           <ul className={css.imageGallery}>
             <ImageGalleryItem images={images} />
-            {/* {showModal && <ModalOpenImages />} */}
-            <ModalOpenImages />
           </ul>
           <LoadMoreBtn page={this.loadMoreImages} disabled={isButtonDisabled} />
         </div>

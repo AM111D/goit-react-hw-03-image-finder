@@ -1,4 +1,4 @@
-function LoadMoreBtn({ page, isButtonDisabled }) {
+function LoadMoreBtn({ page, disabled }) {
   const handleClick = event => {
     event.preventDefault();
     page();
@@ -6,7 +6,7 @@ function LoadMoreBtn({ page, isButtonDisabled }) {
 
   return (
     <>
-      <button type="button" onClick={handleClick} disabled={!isButtonDisabled}>
+      <button type="button" onClick={handleClick} disabled={disabled}>
         MORE
       </button>
     </>
