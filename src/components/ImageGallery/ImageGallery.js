@@ -6,7 +6,7 @@ const ImagesGallery = ({ images }) => {
   console.log(images);
 
   return (
-    <ul className={css.gallery}>
+    <ul className={css.imageGallery}>
       {images.map(image => {
         return (
           <ImageGalleryItem

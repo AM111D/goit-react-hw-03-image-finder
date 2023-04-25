@@ -7,6 +7,8 @@ import FetchImageApi from 'services/image-api';
 import ImagesLoader from './Loader/Loader';
 import ImageSearchError from './ImagesError/ImagesError';
 import ImagesGallery from './ImageGallery/ImageGallery';
+import ButtonLoadMore from './Button/ButtonLoadMore';
+import Modal from './Modal/Modal';
 
 // import ImageGallery from './ImageGallery/ImageGallery';
 
@@ -18,7 +20,7 @@ class App extends Component {
     status: 'idle',
     page: 1,
     loading: false,
-    isButtonDisabled: false,
+    isButtonDisabled: true,
     showModal: false,
   };
 
@@ -34,6 +36,7 @@ class App extends Component {
   };
 
   getImages = async () => {
+    this.setState({ status: 'pending', loading: true });
     try {
       const images = await FetchImageApi(this.state.imagesName);
       console.log(images);
@@ -57,6 +60,30 @@ class App extends Component {
     }
   };
 
+  loadMoreImages = async () => {
+    try {
+      const newImages = await FetchImageApi(
+        this.state.imagesName,
+        this.state.page + 1
+      );
+
+      const allImages = [...this.state.images, ...newImages];
+      this.setState({
+        images: allImages,
+        status: 'resolve',
+        page: this.state.page + 1,
+      });
+    } catch (error) {}
+  };
+
+  handleOpenModal = () => {
+    this.setState({ showModal: true });
+  };
+
+  handleCloseModal = () => {
+    this.setState({ showModal: false });
+  };
+
   render() {
     const { images, error, status, loading, isButtonDisabled, showModal } =
       this.state;
@@ -77,6 +104,18 @@ class App extends Component {
       <div>
         <Searchbar onSubmit={this.handleFormSubmit} />
         <ImagesGallery images={images} />
+
+        {!isButtonDisabled && (
+          <ButtonLoadMore
+            loadMoreImages={this.loadMoreImages}
+            disabled={isButtonDisabled}
+          />
+        )}
+
+        <Modal>
+          <h1>edswfewdfewe</h1>
+        </Modal>
+
         <ToastContainer autoClose={3000} />
       </div>
     );
