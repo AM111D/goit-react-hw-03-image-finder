@@ -2,7 +2,6 @@ import css from './ImageGalleryItem.module.css';
 import PropTypes from 'prop-types';
 
 const ImageGalleryItem = props => {
-  // console.log(props.tags);
   return (
     <li className={css.gallery_item} key={props.id} id={props.id}>
       <img

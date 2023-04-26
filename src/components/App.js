@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Searchbar from './Searchbar/Searchbar';
-
 import FetchImageApi from 'services/image-api';
 import ImagesLoader from './Loader/Loader';
 import ImageSearchError from './ImagesError/ImagesError';
