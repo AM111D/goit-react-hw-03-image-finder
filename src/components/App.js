@@ -89,8 +89,7 @@ class App extends Component {
   };
 
   render() {
-    const { images, error, status, loading, isButtonDisabled, showModal } =
-      this.state;
+    const { images, error, status, isButtonDisabled, showModal } = this.state;
 
     if (status === 'pending') {
       return <ImagesLoader />;

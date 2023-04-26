@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import css from './ImageGallery.module.css';
 import ImageGalleryItem from 'components/ImageGalleryItem/ImageGalleryItem';
 import PropTypes from 'prop-types';
@@ -14,11 +14,10 @@ const ImagesGallery = ({ images, onClick }) => {
         return (
           <ImageGalleryItem
             key={image.id}
-            id={image.id}
             tags={image.tags}
             webformatURL={image.webformatURL}
             largeImageURL={image.largeImageURL}
-            onClick={handleImageClick} // передайте функцию handleImageClick
+            onClick={handleImageClick} //
           />
         );
       })}
