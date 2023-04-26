@@ -1,5 +1,6 @@
 import css from './Modal.module.css';
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 class Modal extends Component {
   componentDidMount() {
@@ -24,14 +25,13 @@ class Modal extends Component {
 
 export default Modal;
 
-// const Modal = ({ handleCloseModal, selectedImage }) => {
-//   return (
-//     <div className={css.overlay} onClick={handleCloseModal}>
-//       <div className={css.modal}>
-//         <img src={selectedImage} alt="" />
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Modal;
+Modal.propTypes = {
+  onClose: PropTypes.func.isRequired,
+  images: PropTypes.arrayOf(
+    PropTypes.shape({
+      selectedImage: PropTypes.string,
+    })
+  ),
+  onClick: PropTypes.func.isRequired,
+  selectedImage: PropTypes.string,
+};

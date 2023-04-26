@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import css from './ImageGallery.module.css';
 import ImageGalleryItem from 'components/ImageGalleryItem/ImageGalleryItem';
+import PropTypes from 'prop-types';
 
 const ImagesGallery = ({ images, onClick }) => {
   const handleImageClick = largeImageURL => {
@@ -26,3 +27,15 @@ const ImagesGallery = ({ images, onClick }) => {
 };
 
 export default ImagesGallery;
+
+ImagesGallery.propTypes = {
+  images: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      tags: PropTypes.string.isRequired,
+      webformatURL: PropTypes.string.isRequired,
+      largeImageURL: PropTypes.string.isRequired,
+    })
+  ),
+  onClick: PropTypes.func.isRequired,
+};

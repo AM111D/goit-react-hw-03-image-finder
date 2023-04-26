@@ -1,7 +1,7 @@
 import { ThreeCircles } from 'react-loader-spinner';
 import css from './Loader.module.css';
 
-function ImagesLoader({ imagesName }) {
+function ImagesLoader({}) {
   return (
     <div className={css.loader}>
       <h2>Loading</h2>
