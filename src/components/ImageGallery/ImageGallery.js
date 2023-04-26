@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 import css from './ImageGallery.module.css';
 import ImageGalleryItem from 'components/ImageGalleryItem/ImageGalleryItem';
 
-const ImagesGallery = ({ images }) => {
-  console.log(images);
+const ImagesGallery = ({ images, onClick }) => {
+  const handleImageClick = largeImageURL => {
+    onClick(largeImageURL);
+  };
 
   return (
     <ul className={css.imageGallery}>
@@ -14,6 +16,8 @@ const ImagesGallery = ({ images }) => {
             id={image.id}
             tags={image.tags}
             webformatURL={image.webformatURL}
+            largeImageURL={image.largeImageURL}
+            onClick={handleImageClick} // передайте функцию handleImageClick
           />
         );
       })}

@@ -10,8 +10,6 @@ import ImagesGallery from './ImageGallery/ImageGallery';
 import ButtonLoadMore from './Button/ButtonLoadMore';
 import Modal from './Modal/Modal';
 
-// import ImageGallery from './ImageGallery/ImageGallery';
-
 class App extends Component {
   state = {
     imagesName: '',
@@ -22,6 +20,7 @@ class App extends Component {
     loading: false,
     isButtonDisabled: true,
     showModal: false,
+    selectedImage: null,
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -76,12 +75,18 @@ class App extends Component {
     } catch (error) {}
   };
 
-  handleOpenModal = () => {
-    this.setState({ showModal: true });
+  handleOpenModal = largeImageURL => {
+    this.setState({ showModal: true, selectedImage: largeImageURL });
   };
 
   handleCloseModal = () => {
     this.setState({ showModal: false });
+  };
+
+  toggleModal = () => {
+    this.setState(({ showModal }) => ({
+      showModal: !showModal,
+    }));
   };
 
   render() {
@@ -103,7 +108,7 @@ class App extends Component {
     return (
       <div>
         <Searchbar onSubmit={this.handleFormSubmit} />
-        <ImagesGallery images={images} />
+        <ImagesGallery images={images} onClick={this.handleOpenModal} />
 
         {!isButtonDisabled && (
           <ButtonLoadMore
@@ -112,9 +117,14 @@ class App extends Component {
           />
         )}
 
-        <Modal>
-          <h1>edswfewdfewe</h1>
-        </Modal>
+        {showModal && (
+          <Modal
+            onClose={this.handleCloseModal}
+            images={this.state.images}
+            onClick={this.handleCloseModal}
+            selectedImage={this.state.selectedImage}
+          />
+        )}
 
         <ToastContainer autoClose={3000} />
       </div>

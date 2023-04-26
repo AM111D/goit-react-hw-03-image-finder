@@ -12,8 +12,17 @@
 }
 
 .modal {
-    max-width: calc(100vw - 48px);
-    max-height: calc(100vh - 24px);
+    position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        min-height: 300px;
+        max-width: 600px;
+        width: 100%;
+        padding: 12px;
+        background-color: #fff;
+        border-radius: 3px;
+      
 }
 /* 
         position: absolute;
@@ -26,3 +35,6 @@
         padding: 12px;
         background-color: #fff;
         border-radius: 3px; */
+
+                        /* max-width: calc(100vw - 48px);
+                        max-height: calc(100vh - 24px); */
